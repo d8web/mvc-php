@@ -55,7 +55,8 @@ class Testimony extends Page {
         // Conteúdo da Home
         $content = View::render("admin/modules/testimonials/index", [
             "items"      => self::getTestimonyItems($request, $obPagination),
-            "pagination" => parent::getPagination($request, $obPagination)
+            "pagination" => parent::getPagination($request, $obPagination),
+            "status"     => self::getStatus($request)
         ]);
 
         // Retorna a página completa
@@ -72,7 +73,8 @@ class Testimony extends Page {
         $content = View::render("admin/modules/testimonials/form", [
             "title"   => "Cadastrar depoimento",
             "name"    => "",
-            "message" => ""
+            "message" => "",
+            "status"  => ""
         ]);
 
         // Retorna a página completa
@@ -84,11 +86,11 @@ class Testimony extends Page {
      * @param Request $request
      * @return string
      */
-    public static function SetNewTestimony($request) {
+    public static function setNewTestimony($request) {
         // Post vars
         $postVars = $request->getPostVars();
         
-        // Nova instância de depoimento
+        // Nova instancia de depoimento
         $obTestimony = new EntityTestimony();
         $obTestimony->name = $postVars["name"];
         $obTestimony->message = $postVars["message"];
@@ -96,6 +98,32 @@ class Testimony extends Page {
 
         // Redirecionar usuário
         $request->getRouter()->redirect("/admin/testimonials/" . $obTestimony->id . "/edit?status=created");
+    }
+
+    /**
+     * Método responsável por retornar a mensagem de status
+     * @param request $request
+     * @return string
+     */
+    private static function getStatus($request) {
+        // Query params
+        $queryParams = $request->getQueryParams();
+
+        // Status
+        if(!isset($queryParams["status"])) return "";
+
+        // Mensagem de status
+        switch($queryParams["status"]) {
+            case "created":
+                return Alert::getSuccess("Depoimento criado com sucesso!");
+            break;
+            case "updated":
+                return Alert::getSuccess("Depoimento atualizado com sucesso!");
+            break;
+            case "deleted":
+                return Alert::getSuccess("Depoimento deletado com sucesso!");
+            break;
+        }
     }
 
     /**
@@ -117,11 +145,86 @@ class Testimony extends Page {
         $content = View::render("admin/modules/testimonials/form", [
             "title"   => "Editar depoimento",
             "name"    => $obTestimony->name,
-            "message" => $obTestimony->message
+            "message" => $obTestimony->message,
+            "status"  => self::getStatus($request)
         ]);
 
         // Retorna a página completa
         return parent::getPanel("Editar depoimento - Painel | MVC", $content, "testimonials");
+    }
+
+    /**
+     * Método responsável por editar um depoimento
+     * @param Request $request
+     * @param integer $id
+     * @return string
+     */
+    public static function setEditTestimony($request, $id) {
+        // Obtém o depoimento do banco de dados
+        $obTestimony = EntityTestimony::getTestimonyById($id);
+        
+        // Validar se existe
+        if(!$obTestimony instanceof EntityTestimony) {
+            $request->getRouter()->redirect("/admin/testimonials");
+        }
+
+        // Post vars
+        $postVars = $request->getPostVars();
+
+        // Atualiza a instancia
+        $obTestimony->name = $postVars["name"] ?? $postVars->name;
+        $obTestimony->message = $postVars["message"] ?? $postVars->message;
+        $obTestimony->update();
+
+        // Redirecionar usuário
+        $request->getRouter()->redirect("/admin/testimonials/" . $obTestimony->id . "/edit?status=updated");
+    }
+
+    /**
+     * Método responsável por deletar o formulário de exclusão um depoimento
+     * @param Request $request
+     * @param integer $id
+     * @return string
+     */
+    public static function getDeleteTestimony($request, $id) {
+        // Obtém o depoimento do banco de dados
+        $obTestimony = EntityTestimony::getTestimonyById($id);
+        
+        // Validar se existe
+        if(!$obTestimony instanceof EntityTestimony) {
+            $request->getRouter()->redirect("/admin/testimonials");
+        }
+
+        // Conteúdo do formulário
+        $content = View::render("admin/modules/testimonials/delete", [
+            "name"    => $obTestimony->name,
+            "message" => $obTestimony->message
+        ]);
+
+        // Retorna a página completa
+        return parent::getPanel("Excluir depoimento - Painel | MVC", $content, "testimonials");
+    }
+
+    /**
+     * Método responsável por excluir um depoimento
+     * @param Request $request
+     * @param integer $id
+     * @return string
+     */
+    public static function setDeleteTestimony($request, $id) {
+        // Obtém o depoimento do banco de dados
+        $obTestimony = EntityTestimony::getTestimonyById($id);
+        
+        // Validar se existe
+        if(!$obTestimony instanceof EntityTestimony) {
+            $request->getRouter()->redirect("/admin/testimonials");
+        }
+
+        // Exclui o depoimento
+        $obTestimony->delete();
+
+        // Redirecionar usuário
+        $request->getRouter()->redirect("/admin/testimonials?status=deleted");
     }
 
 }

@@ -29,7 +29,7 @@ $obRouter->post("/admin/testimonials/new", [
         "required-admin-login"
     ],
     function($request) {
-        return new Response(200, Admin\Testimony::SetNewTestimony($request));
+        return new Response(200, Admin\Testimony::setNewTestimony($request));
     }
 ]);
 
@@ -40,5 +40,35 @@ $obRouter->get("/admin/testimonials/{id}/edit", [
     ],
     function($request, $id) {
         return new Response(200, Admin\Testimony::getEditTestimony($request, $id));
+    }
+]);
+
+// Rota post de edição de um depoimento (POST)
+$obRouter->post("/admin/testimonials/{id}/edit", [
+    "middlewares" => [
+        "required-admin-login"
+    ],
+    function($request, $id) {
+        return new Response(200, Admin\Testimony::setEditTestimony($request, $id));
+    }
+]);
+
+// Rota get de exclusão de um depoimento
+$obRouter->get("/admin/testimonials/{id}/delete", [
+    "middlewares" => [
+        "required-admin-login"
+    ],
+    function($request, $id) {
+        return new Response(200, Admin\Testimony::getDeleteTestimony($request, $id));
+    }
+]);
+
+// Rota post de exclusão de um depoimento (POST)
+$obRouter->post("/admin/testimonials/{id}/delete", [
+    "middlewares" => [
+        "required-admin-login"
+    ],
+    function($request, $id) {
+        return new Response(200, Admin\Testimony::setDeleteTestimony($request, $id));
     }
 ]);

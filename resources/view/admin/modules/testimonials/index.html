@@ -1,12 +1,16 @@
-<h1>Depoimentos</h1>
-<p>Depoimentos enviados pelos usuários.</p>
+<div class="d-flex justify-content-between align-items-center">
+    <div>
+        <h1>Depoimentos</h1>
+        <p>Depoimentos enviados pelos usuários.</p>
+    </div>
+    <a href="{{URL}}/admin/testimonials/new">
+        <button type="button" class="btn btn-primary">Cadastrar depoimento</button>
+    </a>
+</div>
+
 <hr>
 
-<a href="{{URL}}/admin/testimonials/new">
-    <button type="button" class="btn btn-primary">Cadastrar depoimento</button>
-</a>
-
-<hr>
+{{status}}
 
 <table class="table table-light table-striped">
     <thead>

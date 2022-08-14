@@ -50,6 +50,27 @@ class Testimony {
     }
 
     /**
+     * Método responsável por atualizar os dados da intancia atual no banco de dados
+     * @return boolean
+     */
+    public function update() {
+        // Atualiza o depoimento no banco de dados
+        return (new Database("testimonials"))->update("id = ".$this->id, [
+            "name"       => $this->name,
+            "message"    => $this->message
+        ]);
+    }
+
+    /**
+     * Método responsável por deletar um depoimento no banco de dados
+     * @return boolean
+     */
+    public function delete() {
+        // Deleta o depoimento do banco de dados
+        return (new Database("testimonials"))->delete("id = ".$this->id);
+    }
+
+    /**
      * Método responsável por retornar um depoimento com base no seu ID
      * @param integer $id
      * @return Testimony
