@@ -168,13 +168,13 @@ class User extends Page {
     }
 
     /**
-     * Método responsável por editar um depoimento
+     * Método responsável por editar um usuário
      * @param Request $request
      * @param integer $id
      * @return string
      */
     public static function setEditUser($request, $id) {
-        // Obtém o depoimento do banco de dados
+        // Obtém o usuário do banco de dados
         $obUser = EntityUser::getUserById($id);
         
         // Validar se existe
@@ -186,8 +186,8 @@ class User extends Page {
         $postVars = $request->getPostVars();
 
         // Atualiza a instancia
-        $obUser->name = $postVars["name"] ?? $postVars->name;
-        $obUser->email = $postVars["email"] ?? $postVars->email;
+        $obUser->name     = $postVars["name"] ?? $postVars->name;
+        $obUser->email    = $postVars["email"] ?? $postVars->email;
         $obUser->password = password_hash($postVars["email"], PASSWORD_DEFAULT) ?? $postVars->email;
         $obUser->update();
 
@@ -196,13 +196,13 @@ class User extends Page {
     }
 
     /**
-     * Método responsável por deletar o formulário de exclusão um depoimento
+     * Método responsável por deletar o formulário de exclusão um usuário
      * @param Request $request
      * @param integer $id
      * @return string
      */
     public static function getDeleteUser($request, $id) {
-        // Obtém o depoimento do banco de dados
+        // Obtém o usuário do banco de dados
         $obUser = EntityUser::getUserById($id);
         
         // Validar se existe
@@ -221,13 +221,13 @@ class User extends Page {
     }
 
     /**
-     * Método responsável por excluir um depoimento
+     * Método responsável por excluir um usuário
      * @param Request $request
      * @param integer $id
      * @return string
      */
     public static function setDeleteUser($request, $id) {
-        // Obtém o depoimento do banco de dados
+        // Obtém o usuário do banco de dados
         $obUser = EntityUser::getUserById($id);
         
         // Validar se existe
