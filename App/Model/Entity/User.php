@@ -39,4 +39,63 @@ class User {
         return (new Database("users"))->select('email = "'.$email.'"')->fetchObject(self::class);
     }
 
+    /**
+     * Método responsável por retornar os usuários
+     * @param string $where
+     * @param string $order
+     * @param string $limit
+     * @param string $fields
+     * @return PDOStatement
+     */
+    public static function getUsers($where = null, $order = null, $limit = null, $fields = "*") {
+        return (new Database("users"))->select($where, $order, $limit, $fields);
+    }
+
+    /**
+     * Método responsável por inserir o usuário no banco de dados
+     * @return boolean
+     */
+    public function insert() {
+        // Inserir usuário no banco de dados
+        $this->id = (new Database("users"))->insert([
+            "name"     => $this->name,
+            "email"    => $this->email,
+            "password" => $this->password
+        ]);
+
+        // Sucesso!
+        return true;
+    }
+
+    /**
+     * Método responsável por retornar um usuário com base no seu ID
+     * @param integer $id
+     * @return User
+     */
+    public static function getUserById($id) {
+        return self::getUsers("id = ".$id)->fetchObject(self::class);
+    }
+
+    /**
+     * Método responsável por atualizar os dados da intancia atual no banco de dados
+     * @return boolean
+     */
+    public function update() {
+        // Atualiza o depoimento no banco de dados
+        return (new Database("users"))->update("id = ".$this->id, [
+            "name"     => $this->name,
+            "email"    => $this->email,
+            "password" => $this->password
+        ]);
+    }
+
+    /**
+     * Método responsável por deletar um depoimento no banco de dados
+     * @return boolean
+     */
+    public function delete() {
+        // Deleta o usuário do banco de dados
+        return (new Database("users"))->delete("id = ".$this->id);
+    }
+
 }
