@@ -13,5 +13,8 @@ include __DIR__ . "/routes/pages.php";
 // Incluir as rotas do painel
 include __DIR__ . "/routes/admin.php";
 
+// Incluir as rotas da API
+include __DIR__ . "/routes/api.php";
+
 // Imprime o response da rota
 $obRouter->run()->sendResponse();
