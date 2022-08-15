@@ -40,6 +40,15 @@ class User {
     }
 
     /**
+     * Método responsável por retornar um usuário com base no seu ID
+     * @param integer $id
+     * @return User
+     */
+    public static function getUserById($id) {
+        return self::getUsers("id = ".$id)->fetchObject(self::class);
+    }
+
+    /**
      * Método responsável por retornar os usuários
      * @param string $where
      * @param string $order
@@ -68,20 +77,11 @@ class User {
     }
 
     /**
-     * Método responsável por retornar um usuário com base no seu ID
-     * @param integer $id
-     * @return User
-     */
-    public static function getUserById($id) {
-        return self::getUsers("id = ".$id)->fetchObject(self::class);
-    }
-
-    /**
      * Método responsável por atualizar os dados da intancia atual no banco de dados
      * @return boolean
      */
     public function update() {
-        // Atualiza o depoimento no banco de dados
+        // Atualiza o usuário no banco de dados
         return (new Database("users"))->update("id = ".$this->id, [
             "name"     => $this->name,
             "email"    => $this->email,
@@ -90,7 +90,7 @@ class User {
     }
 
     /**
-     * Método responsável por deletar um depoimento no banco de dados
+     * Método responsável por deletar um usuário no banco de dados
      * @return boolean
      */
     public function delete() {

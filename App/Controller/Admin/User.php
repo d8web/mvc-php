@@ -41,7 +41,7 @@ class User extends Page {
             ]);
         }
 
-        // Retorna os depoimentos
+        // Retorna os usuários
         return $items;
     }
 
@@ -63,7 +63,7 @@ class User extends Page {
     }
 
     /**
-     * Método responsável por renderizar o formulário para adicionar um novo depoimento
+     * Método responsável por renderizar o formulário para adicionar um novo usuário
      * @param Request $request
      * @return string
      */
@@ -89,8 +89,8 @@ class User extends Page {
         // Post vars
         $postVars = $request->getPostVars();
 
-        $name = $postVars["name"] ?? "";
-        $email = $postVars["email"] ?? "";
+        $name     = $postVars["name"] ?? "";
+        $email    = $postVars["email"] ?? "";
         $password = $postVars["password"] ?? "";
 
         // Validar o e-mail do usuário
@@ -147,7 +147,7 @@ class User extends Page {
      * @return string
      */
     public static function getEditUser($request, $id) {
-        // Obtém o depoimento do banco de dados
+        // Obtém o usuário do banco de dados
         $obUser = EntityUser::getUserById($id);
         
         // Validar se existe
@@ -185,10 +185,21 @@ class User extends Page {
         // Post vars
         $postVars = $request->getPostVars();
 
+        $name     = $postVars["name"] ?? "";
+        $email    = $postVars["email"] ?? "";
+        $password = $postVars["password"] ?? "";
+
+        // Validar o e-mail do usuário
+        $obUserEmail = EntityUser::getUserByEmail($email);
+        if($obUserEmail instanceof EntityUser && $obUserEmail->id != $id) {
+            // Redirecionar usuário
+            $request->getRouter()->redirect("/admin/users/".$id."/edit?status=duplicated");
+        }
+
         // Atualiza a instancia
-        $obUser->name     = $postVars["name"] ?? $postVars->name;
-        $obUser->email    = $postVars["email"] ?? $postVars->email;
-        $obUser->password = password_hash($postVars["email"], PASSWORD_DEFAULT) ?? $postVars->email;
+        $obUser->name     = $name;
+        $obUser->email    = $email;
+        $obUser->password = password_hash($password, PASSWORD_DEFAULT);
         $obUser->update();
 
         // Redirecionar usuário
@@ -235,7 +246,7 @@ class User extends Page {
             $request->getRouter()->redirect("/admin/users");
         }
 
-        // Exclui o depoimento
+        // Exclui o usuário
         $obUser->delete();
 
         // Redirecionar usuário
